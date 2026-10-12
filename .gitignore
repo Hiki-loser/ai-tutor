@@ -1,0 +1,53 @@
+# ============================================================
+#  大学生期末复习 AI 答疑助手 —— Git 忽略规则
+# ============================================================
+
+# ---- 本地密钥：绝不入库 ----
+secrect.txt
+secret.txt
+secrets.txt
+.env
+.env.*
+
+# ---- 真实运行配置：含 API Key 时不要提交，只提交 config.example.json ----
+config.local.json
+
+# ---- Python 编译缓存 ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ---- 虚拟环境 / 打包产物 ----
+.venv/
+venv/
+env/
+build/
+dist/
+*.egg-info/
+
+# ---- 运行时数据（数据库 / 日志 / 缓存）----
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/logs/
+data/cache/
+data/tmp/
+*.log
+
+# ---- 评测中间产物（正式报告见 deliverables/ 下的图解报告与 Excel）----
+deliverables/**/risk_pair-*.json
+deliverables/**/risk_pair-*.md
+deliverables/**/repetition-*.json
+deliverables/**/repetition-*.md
+deliverables/**/comparison-*.json
+deliverables/**/comparison-*.md
+deliverables/_tmp/
+*.tmp
+
+# ---- 编辑器 / 操作系统 ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

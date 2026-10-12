@@ -1,0 +1,20 @@
+# 依赖说明
+#
+# 本项目运行时**不需要任何第三方依赖**，仅使用 Python 标准库（要求 Python 3.10+，
+# 开发与验证环境为 CPython 3.12）。
+#
+#   http.server / urllib / sqlite3 / json / argparse / dataclasses / re / unicodedata ...
+#
+# 因此 requirements.txt 中没有必须安装的包。直接运行即可：
+#
+#   python -m ai_tutor selftest      # 一键自检（36 项，无需联网）
+#   python -m ai_tutor web --open    # 启动 Web 界面
+#
+# ---------------------------------------------------------------------------
+# 可选依赖（仅 tools/ 目录下的辅助脚本需要，用于从汇报 PPTX 中抽取文本内容）
+# ---------------------------------------------------------------------------
+# python-pptx>=1.0.2
+# Pillow>=10.0.0
+#
+# 若需要重新生成交付用的 PPT/Word 文档，可使用工作区自带的 LibreOffice 工具链，
+# 详见 office-skills 说明，无需在 Python 环境中额外安装转换工具。

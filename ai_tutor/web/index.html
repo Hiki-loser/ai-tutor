@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大学生期末复习 AI 答疑助手</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">AI</div>
+    <div>
+      <h1>大学生期末复习 AI 答疑助手</h1>
+      <p class="sub">智能驱动的个性化学习解决方案 · 第二组：李明轩　韩武晋　郑志</p>
+    </div>
+  </div>
+  <div class="status" id="status">
+    <span class="dot" id="statusDot"></span><span id="statusText">连接中…</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-view="chat">答疑工作台</button>
+  <button class="tab" data-view="library">提示词库</button>
+  <button class="tab" data-view="risk">风险实证</button>
+  <button class="tab" data-view="records">会话与记录</button>
+  <button class="tab" data-view="about">项目说明</button>
+</nav>
+
+<main>
+<!-- ======================= 答疑工作台 ======================= -->
+<section class="view active" id="view-chat">
+  <div class="layout">
+    <aside class="panel controls">
+      <h2>问答设置</h2>
+
+      <label>功能模块 <span class="hint">M1–M6 一一对应六大痛点</span></label>
+      <select id="moduleSelect"></select>
+      <p class="mod-desc" id="moduleDesc">自动识别：按你的提问内容路由到最合适的模块</p>
+
+      <label>模型</label>
+      <select id="modelSelect"></select>
+      <label class="checkbox"><input type="checkbox" id="routerToggle"> 启用任务路由（按任务类型自动选模型）</label>
+
+      <label>图片输入 <span class="hint" id="visionHint">支持题目照片 / 截图 / 手写演算</span></label>
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
+        <div class="dz-inner">
+          <span class="dz-icon">＋</span>
+          <span class="dz-text">点击选择、拖拽到此处，或直接 Ctrl+V 粘贴截图</span>
+        </div>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+      <p class="hintline" id="imageHint" hidden></p>
+
+      <div class="row" id="extraM5" hidden>
+        <div><label>科目</label><input id="m5Subject" placeholder="高等数学"></div>
+        <div><label>剩余天数</label><input id="m5Days" type="number" value="5" min="1" max="30"></div>
+      </div>
+      <div id="extraM5b" hidden>
+        <label>诊断作答（提交后进入第二阶段：生成个性化计划）</label>
+        <textarea id="m5Answers" rows="4" placeholder="把 5 道诊断题的作答贴在这里；留空则只输出诊断题"></textarea>
+      </div>
+      <div id="extraM6" hidden>
+        <label>你的本轮作答（口语/背诵内容）</label>
+        <textarea id="m6Reply" rows="4" placeholder="直接写下你这轮的答案；留空表示开始新一轮练习"></textarea>
+      </div>
+      <div id="extraM3" hidden>
+        <label>你的解题过程（用于错因定位）</label>
+        <textarea id="m3Answer" rows="4" placeholder="贴出你的完整解答步骤，AI 才能定位到第几步出错"></textarea>
+      </div>
+
+      <button class="ghost" id="resetBtn">清空会话上下文</button>
+    </aside>
+
+    <section class="panel chat">
+      <div class="messages" id="messages">
+        <div class="empty" id="emptyState">
+          <h3>开始你的期末复习</h3>
+          <p>选择左侧模块，或直接提问（自动识别模块）。试试下面这些例子：</p>
+          <div class="examples" id="examples"></div>
+        </div>
+      </div>
+      <form class="composer" id="askForm">
+        <textarea id="questionInput" rows="3" placeholder="输入你的问题（可附带题目图片），Enter 发送，Shift+Enter 换行…"></textarea>
+        <div class="composer-bar">
+          <span class="hint" id="composerHint"></span>
+          <button type="submit" id="sendBtn">发送</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</section>
+
+<!-- ======================= 提示词库 ======================= -->
+<section class="view" id="view-library">
+  <div class="panel">
+    <h2>提示词设计方法论：五要素框架</h2>
+    <div id="methodology"></div>
+    <div id="structures"></div>
+  </div>
+  <div class="panel">
+    <h2>六大模块精细提示词库</h2>
+    <p class="hintline">应用对外只使用精细提示：界面没有模式开关，提问即按对应模块的模板执行。</p>
+    <div id="libraryBody" class="library"></div>
+  </div>
+</section>
+
+<!-- ======================= 风险实证 ======================= -->
+<section class="view" id="view-risk">
+  <div class="panel">
+    <h2>第三阶段 · 风险实证分析</h2>
+    <p class="hintline">
+      四类专项测试：事实幻觉 / 逻辑缺陷 / 同质化 / 多工具横向对比。
+      通过标准：精细提示下 幻觉率 ≤20%、逻辑错误 ≤1 处、重复度 ≤30%。
+    </p>
+    <div class="risk-actions">
+      <button data-risk="pair">执行：事实幻觉 + 逻辑缺陷（消融对照）</button>
+      <button data-risk="repetition">执行：同质化（重复 3 次）</button>
+      <button data-risk="comparison">执行：多工具横向对比</button>
+      <button data-risk="all" class="primary">执行：全量四类测试</button>
+      <span class="hint" id="riskStatus"></span>
+    </div>
+    <div id="riskResult"></div>
+  </div>
+  <div class="panel">
+    <h2>测试用例集</h2>
+    <div id="caseList"></div>
+  </div>
+</section>
+
+<!-- ======================= 记录 ======================= -->
+<section class="view" id="view-records">
+  <div class="panel">
+    <div class="panel-head">
+      <h2>会话记录</h2>
+      <button class="ghost small" id="reloadSessions">刷新</button>
+    </div>
+    <div id="sessionList"></div>
+  </div>
+  <div class="panel">
+    <h2>评测批次</h2>
+    <div id="evalList"></div>
+  </div>
+  <div class="panel">
+    <h2>运行报告</h2>
+    <button class="ghost small" id="loadReport">生成 / 刷新报告</button>
+    <pre id="reportBox" class="pre"></pre>
+  </div>
+</section>
+
+<!-- ======================= 关于 ======================= -->
+<section class="view" id="view-about">
+  <div class="panel" id="aboutBox"></div>
+</section>
+</main>
+
+<footer class="footer">
+  <span id="footInfo">大学生期末复习 AI 答疑助手</span>
+  <span class="sep">·</span>
+  <span>本地运行，零第三方依赖，离线可复现</span>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

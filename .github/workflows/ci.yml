@@ -8,7 +8,7 @@ jobs:
         python: ['3.10', '3.14']
     env:
       PYTHONUTF8: '1'
-      AI_TUTOR_DATA_DIR: ${{ runner.temp }}/ai-tutor-test-data
+      AI_TUTOR_DATA_DIR: data/tmp/ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

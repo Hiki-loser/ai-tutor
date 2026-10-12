@@ -53,13 +53,31 @@ python -m ai_tutor chat
 # 5) 阶段三风险实证（默认用 deepseek，加 --model mock 可走离线）
 python -m ai_tutor risk run --kind all
 
-# 6) 导出全部交付文档（提示词库 / 模块说明 / 风险方案 / 用例集）
+# 6) 生成汇报用图解（8 张 PNG + Excel 记录表 + 图文报告）
+python -m ai_tutor report assets --mode auto
+
+# 7) 导出全部交付文档（提示词库 / 模块说明 / 风险方案 / 用例集）
 python -m ai_tutor export all
 ```
 
 > **自检默认走内置离线模型**，保证结果可复现、不消耗额度；
 > 要用真实模型自检：`python -m ai_tutor selftest --online`。
 > 任何远端调用失败都会自动降级到离线模型，并在结果里标注 `degraded` 与原因。
+
+### 更新到 GitHub
+
+本仓库已发布在 <https://github.com/erichan111111/ai-tutor>。
+
+```bash
+# 方式一：已安装 git
+git add -A && git commit -m "说明这次改了什么" && git push
+
+# 方式二：没有 git，用 gh CLI 通过 API 推送（本机就是这种情况）
+python tools/github_push.py --repo ai-tutor --push-only --message "说明这次改了什么"
+```
+
+> `tools/github_push.py` 会跳过 `.gitignore` 列出的内容（密钥、数据库、评测中间产物），
+> 推送前打印文件清单与体积，可先用 `--dry-run` 预览。
 
 ---
 
@@ -99,14 +117,19 @@ D:\project
 │   │   ├── cases.py              # H1–H6 / L1–L5 / T1 / 对比用例 + 判定器
 │   │   ├── metrics.py            # 五维量化指标 + 达标判定
 │   │   └── runner.py             # 四类测试执行器 + 报告生成
+│   ├── report/                   # 汇报素材生成（图解 + Excel）
+│   │   ├── canvas.py             # 中文字体 / HiDPI 画布 / 表格 / 柱状图 / 热力图
+│   │   ├── data.py               # 采集测试数据（在线实测 / 历史批次 / 离线复现）
+│   │   ├── figures.py            # 8 张图解的绘制实现
+│   │   ├── workbook.py           # Excel 记录表（含原生图表与条件格式）
+│   │   └── generate.py           # 生成入口 + Markdown 图文报告
 │   └── web/                      # 前端（原生 HTML/CSS/JS，无框架无 CDN）
 ├── tests/smoke_test.py           # 核心链路冒烟测试
 ├── tests/fixtures/               # 测试用图片（题目样例）
-├── tools/                        # 辅助脚本（PPT 内容抽取、重构辅助）
-├── deliverables/                 # 导出的交付文档（提示词库等）
+├── tools/                        # 仓库维护脚本（PPT 抽取、GitHub 推送等）
+├── deliverables/                 # 交付物：提示词库 / 风险实证图解 / Excel
 ├── docs/                         # 使用说明 / 架构说明 / 真实模型实测结果
-├── data/                         # 运行时数据（SQLite + 测试报告，自动创建）
-├── data_real/                    # 真实模型实测数据
+├── data/                         # 运行时数据（SQLite + 报告；自动创建，不入库）
 ├── config.json                   # 本地配置：模型、图片限制、通过标准（api_key 留空）
 ├── config.example.json           # 配置模板（含环境变量说明），可复制为 config.json
 ├── requirements.txt              # 依赖说明（本应用不需要安装任何包）

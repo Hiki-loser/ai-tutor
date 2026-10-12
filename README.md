@@ -340,8 +340,10 @@ python -m ai_tutor report --out data/report.md   # 生成运行报告
 ## 九、常见问题
 
 **Q：需要自己配 Key 吗？**
-A：不需要，`config.json` 里已经配好 DeepSeek 的 Key，默认模型 `deepseek-flash`
-（同时支持文本与图片输入），开箱即用。要换模型时用 `--model` 或改 `llm.default`。
+A：需要自己配一次（仓库里不放密钥）。二选一：
+`$env:DEEPSEEK_API_KEY = "sk-..."`（环境变量，优先级最高、推荐），
+或把 `config.example.json` 复制为 `config.json` 并填写 `deepseek.api_key`。
+配置后默认模型 `deepseek-flash` 同时支持文本与图片输入；**不配也能跑**（自动用离线模型）。
 
 **Q：没有网络/Key 时能用吗？**
 A：能。内置离线模型完整实现六个模块、四类风险测试、图片上传链路与全部指标计算，
